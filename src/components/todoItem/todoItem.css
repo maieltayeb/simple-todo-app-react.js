@@ -1,0 +1,29 @@
+
+
+.input-container {
+  display: flex;
+  width: 100%;
+  margin-bottom: 3px;
+}
+
+.icon {
+  padding: 10px;
+  background-color: white;
+  color: rgb(83, 81, 81);
+  min-width: 50px;
+  text-align: center;
+ 
+}
+.icon-delete{
+    background-color: red;
+    color: white;
+}
+.input-field {
+  width: 100%;
+  padding: 10px;
+  outline: none;
+  border: none;
+}
+.del{
+  text-decoration: line-through;
+}
