@@ -1,54 +1,43 @@
 import React from "react";
 import './todoItem.css';
-import axios from "axios";
-const TodoItem=(props)=>{
+import {connect ,useDispatch } from "react-redux";
+import {DeleteTodo,updateTodo} from '../../redux/actions/todosActions';
 
-const {todo,deleteTodo,onDoneTodo}=props;
+const TodoItem=(props)=>{
+let {todo}=props;
+const dispatch=useDispatch();
 
 const deleteTodoHandler=(item)=>{
-   let id=item.id;
 
-axios.delete(`https://todo-app-bf986-default-rtdb.firebaseio.com/todos/${id}.json`)
-  .then((res)=>{
-    if(res.status === 200) deleteTodo(id);
-  })
-  .catch((err)=>console.log(err));
-  
-
+dispatch(DeleteTodo(item.id))
  
 }
 
 
 const onDoneHandler=(todo)=>{
+ 
   let id=todo.id;
- const updateTodo = {
+ const TodoUpdated = {
   text:todo.text,
   isDone:!todo.isDone,
   date:todo.date
 }
-
-axios.patch(`https://todo-app-bf986-default-rtdb.firebaseio.com/todos/${id}.json`,updateTodo )
-.then((res)=>{
-  if(res.status === 200) onDoneTodo(id);
-})
+dispatch(updateTodo(TodoUpdated,id))
 }
- 
+
 let icon=todo.isDone ? "fa fa-check icon":"fa fa-history icon";
-let c=todo.isDone ?"del":"";
+let delClass=todo.isDone ?"del":"";
 return(
 
 
 <div className="input-container">
   
 
-  <i  onClick={()=>onDoneHandler(todo)}  className={icon} aria-hidden="true"></i>
+       <i  onClick={()=>onDoneHandler(todo)}  className={icon} aria-hidden="true"></i> 
+      <input className={`input-field ${delClass}`} type="text"  name={todo.text} value={todo.text} readOnly/>
+      <span>{todo.date}</span>
+       <i className="fa fa-trash icon icon-delete" aria-hidden="true" onClick={()=>deleteTodoHandler(todo)}></i>
   
-  {/* <i className="fa fa-history  icon" onClick={()=>onDoneHandler(todo)}  aria-hidden="true"></i>  */}
-
-     <input className={`input-field ${c}`} type="text"  name={todo.text} value={todo.text} readOnly/>
-     <span>{todo.date}</span>
-     <i className="fa fa-trash icon icon-delete" aria-hidden="true" onClick={()=>deleteTodoHandler(todo)}></i>
- 
   </div>
   
 )
@@ -56,4 +45,13 @@ return(
 
 
 }
-export default TodoItem;
+
+
+const mapStateTOprops=(state)=>{
+  return({
+    state:state.todosArray
+  })
+}
+
+
+export default connect(mapStateTOprops)(TodoItem);

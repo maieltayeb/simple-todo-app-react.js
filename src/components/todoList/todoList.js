@@ -1,15 +1,14 @@
 import React from "react";
+import { connect } from "react-redux";
 import './todoList.css';
 import TodoItem from "../todoItem/todoItem";
 const TodoList=(props)=>{
-    
-    const {todoList,deleteTodo,onDoneTodo}=props;
-  
-    
+  console.log("props from todo list",props);
+const {todoList}=props; 
 return(
 <>
 {todoList.map((todo)=>
- <TodoItem todo={todo} key={todo.id} deleteTodo={deleteTodo} onDoneTodo={onDoneTodo}></TodoItem>
+ <TodoItem key={todo.id} todo={todo} ></TodoItem>
 )}
 
 
@@ -20,4 +19,10 @@ return(
 
 
 }
-export default TodoList;
+const mapStateToProps = reduxState => {
+    return {
+    todoList:reduxState.todo
+     
+    };
+  };
+export default connect(mapStateToProps)(TodoList);

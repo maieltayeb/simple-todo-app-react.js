@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import './addTodoForm.css';
-import axios from "axios";
+import { connect, useDispatch } from 'react-redux';
+import {addTodo} from '../../redux/actions/todosActions';
 const AddtodoForm=(props)=>{
+const dispatch=useDispatch();
 
-const todoValue="" ;
- const [todo,setTodo]=useState(todoValue);
+
+    const todoValue="" ;
+    const [todo,setTodo]=useState(todoValue);
+   
 
  ////input change
 const onChangeHandler=(e)=>{
@@ -25,19 +29,7 @@ const {key}=e;
       }
       if(key==='Enter'){
           setTodo("")
-          axios.post('https://todo-app-bf986-default-rtdb.firebaseio.com/todos.json',newTodo)
-          .then((res)=>{
-         
-            const id=res.data.name;
-         if(res.status===200){
-             props.addTodoHandler({...newTodo,id})
-         }
-
-          })
-          .catch((err)=>{
-              console.log(err);
-          })
-         
+         dispatch(addTodo(newTodo))
       }
 }
 
@@ -56,4 +48,10 @@ onKeyUp={(e)=>onkeyHandler(e)}
 
 
 }
-export default AddtodoForm;
+const mapStateToProps = reduxState => {
+    return {
+    todoList: reduxState.todosArray
+     
+    };
+  };
+export default connect(mapStateToProps)(AddtodoForm);
